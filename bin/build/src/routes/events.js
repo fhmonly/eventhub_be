@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const roleMiddleware_1 = require("../middleware/roleMiddleware");
+const showEventController_1 = require("../controller/events/showEventController");
+const createEventController_1 = require("../controller/events/createEventController");
+const updateEventController_1 = require("../controller/events/updateEventController");
+var router = express_1.default.Router();
+router.use('/', authMiddleware_1.authMiddleware);
+router.get('/', ...showEventController_1.getEventsController);
+router.use('/', roleMiddleware_1.authAdminMiddleware);
+router.get('/:id', ...showEventController_1.getEventDetailController);
+router.post('/', ...createEventController_1.createEventController);
+router.put('/:id', ...updateEventController_1.updateEventController);
+router.delete('/:id', ...updateEventController_1.deleteEventController);
+exports.default = router;
