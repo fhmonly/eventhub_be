@@ -1,19 +1,24 @@
 import jwt from 'jsonwebtoken';
 import { users } from '../../db/schema';
+import ms from 'ms';
+import dotenv from 'dotenv'
+dotenv.config()
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
+const JWT_ACCESS_LIFETIME = process.env.JWT_ACCESS_LIFETIME;
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
-const JWT_EXPIRES_IN = '15m';
-const REFRESH_EXPIRES_IN = 60 * 60 * 24 * 30; // 30 hari
+const JWT_REFRESH_LIFETIME = process.env.JWT_REFRESH_LIFETIME;
 
-export const generateAccessToken = (userId: number, role: typeof users.role.enumValues[number]) =>
-    jwt.sign({ userId, role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+export const generateAccessToken = (userId: number, role: typeof users.role.enumValues[number]) => {
+    const maxAge = ms(JWT_ACCESS_LIFETIME);
+    return jwt.sign({ userId, role }, JWT_ACCESS_SECRET, { expiresIn: maxAge });
+}
 
 
 export const generateRefreshToken = (userId: number) => {
     const jti = crypto.randomUUID();
-    const maxAge = REFRESH_EXPIRES_IN * 1000
+    const maxAge = ms(JWT_REFRESH_LIFETIME);
     const expiresAt = new Date(Date.now() + maxAge)
-    const token = jwt.sign({ userId, jti }, JWT_REFRESH_SECRET, { expiresIn: REFRESH_EXPIRES_IN });
+    const token = jwt.sign({ userId, jti }, JWT_REFRESH_SECRET, { expiresIn: maxAge });
     return { token, jti, expiresAt, maxAge };
 };

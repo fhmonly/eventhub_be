@@ -11,7 +11,7 @@ export const authMiddleware: RequestHandler = (req, res, next) => {
         }
         const token = authHeader.split(" ")[1];
 
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
             if (err) throw createHttpError.Forbidden("Invalid or expired access token");
 
             req.user = decoded as AccessToken;

@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
             throw http_errors_1.default.Unauthorized("Access token required");
         }
         const token = authHeader.split(" ")[1];
-        jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        jsonwebtoken_1.default.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
             if (err)
                 throw http_errors_1.default.Forbidden("Invalid or expired access token");
             req.user = decoded;
