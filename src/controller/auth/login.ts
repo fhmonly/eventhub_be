@@ -3,7 +3,7 @@ import { db } from '../../db';
 import { refreshTokens, users } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcrypt'
-import { body } from 'express-validator';
+import { body, matchedData } from 'express-validator';
 import expressValidatorMiddleware from '../../middleware/expressValidatorMiddleware';
 import createHttpError from 'http-errors';
 import { generateAccessToken, generateRefreshToken } from '../../utils/core/generateToken';
@@ -16,7 +16,8 @@ const reqValidator = [
 
 const reqHandler: RequestHandler = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const { email, password } = matchedData(req);
+        const withRefresh = req.query.withRefresh === 'true';
 
         const [user] = await db.select().from(users).where(eq(users.email, email));
         if (!user) throw new createHttpError.Unauthorized('Invalid credentials');
@@ -35,11 +36,23 @@ const reqHandler: RequestHandler = async (req, res, next) => {
             expiresAt,
         });
 
-        const resultResponse: APIResponse = {
+        const resultResponse: APIResponse<{
+            accessToken: string,
+            role: string | null,
+            refreshToken?: string
+        }> = {
             success: true,
             message: `Welcome ${user.name}!`,
-            data: { accessToken, role: user.role }
+            data: {
+                accessToken,
+                role: user.role
+            }
         }
+
+        if (withRefresh) {
+            resultResponse.data!.refreshToken = refreshToken;
+        }
+
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',

@@ -3,7 +3,7 @@ import { users } from '../../db/schema';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
-const JWT_EXPIRES_IN = '15s';
+const JWT_EXPIRES_IN = '15m';
 const REFRESH_EXPIRES_IN = 60 * 60 * 24 * 30; // 30 hari
 
 export const generateAccessToken = (userId: number, role: typeof users.role.enumValues[number]) =>
