@@ -38,7 +38,7 @@ const reqHandler: RequestHandler = async (req, res, next) => {
         const resultResponse: APIResponse = {
             success: true,
             message: `Welcome ${user.name}!`,
-            data: { accessToken }
+            data: { accessToken, role: user.role }
         }
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,

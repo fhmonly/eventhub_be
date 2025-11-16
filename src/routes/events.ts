@@ -8,8 +8,8 @@ var router = express.Router();
 
 router.use('/', authMiddleware)
 router.get('/', ...getEventsController)
-router.use('/', authAdminMiddleware)
 router.get('/:id', ...getEventDetailController)
+router.use('/', authAdminMiddleware)
 router.post('/', ...createEventController)
 router.put('/:id', ...updateEventController)
 router.delete('/:id', ...deleteEventController)

@@ -19,7 +19,7 @@ const reqValidator = [
 const reqHandler: RequestHandler = async (req, res, next) => {
     try {
         const { title, desc, location, startAt } = req.body;
-        const [newEvent] = await db.insert(events).values({ title, desc, location, startAt }).$returningId();
+        const [newEvent] = await db.insert(events).values({ title, desc, location, startAt: new Date(startAt) }).$returningId();
         const resultResponse: APIResponse = {
             success: true,
             data: {

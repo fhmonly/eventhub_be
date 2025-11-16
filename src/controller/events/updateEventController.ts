@@ -22,7 +22,7 @@ const reqHandler: RequestHandler = async (req, res, next) => {
         const [event] = await db.select().from(events).where(eq(events.id, id));
         if (!event) throw createHttpError.NotFound('Event not found');
 
-        await db.update(events).set(req.body).where(eq(events.id, id));
+        await db.update(events).set({ ...req.body, startAt: new Date(req.body.startAt) }).where(eq(events.id, id));
         const [updatedEvent] = await db.select().from(events).where(eq(events.id, id));
         const resultResponse: APIResponse = {
             success: true,
