@@ -14,7 +14,6 @@
 - [Tech Stack](#tech-stack)
 - [Prasyarat](#prasyarat)
 - [Instalasi](#instalasi)
-- [Konfigurasi](#konfigurasi)
 - [Menjalankan Aplikasi](#menjalankan-aplikasi)
 - [API Documentation](#api-documentation)
 - [Scripts](#scripts)
